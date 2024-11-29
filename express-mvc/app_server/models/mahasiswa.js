@@ -1,7 +1,9 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-let schemaMhs = new mongoose.Schema({
-    nama: String,
+const mahasiswaSchema = new mongoose.Schema({
+    nama: {
+        type: String,
+    },
     npm: {
         type: String,
         require: true,
@@ -9,11 +11,16 @@ let schemaMhs = new mongoose.Schema({
     email: {
         type: String,
         require: true,
+        unique: true,
     },
     tanggal_lahir: {
         type: Date,
+
     },
-    aktif: Boolean,
+    aktif: {
+        type: Boolean,
+    }
 });
 
-mongoose.model('Mahasiswa', schemaMhs);
+const Mahasiswa = mongoose.model('Mahasiswa', mahasiswaSchema);
+module.exports = Mahasiswa;

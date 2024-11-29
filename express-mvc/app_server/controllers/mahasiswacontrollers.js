@@ -1,9 +1,21 @@
-[16.51, 22 / 11 / 2024].: const mongoose = require("mongoose");
-const Mahasiswa = mongoose.model("Mahasiswa");
+const Mahasiswa = require("../models/mahasiswa");
+
+//list data mahasiswa
+// const index = async(req,res) =>{
+//     try {
+//         const mahasiswas = await Mahasiswa.find({});
+//         res.status(200).json(mahasiswas);
+//         if(!mahasiswas){
+//             res.status(400).json ({message : "Collection is Empty"})
+//         }
+//     }catch (error){
+//         res.status(500).json({message : "Error retrieving users", error});
+//     }
+// }
 
 //untuk menghandle request get all mahasiswa
-const Index = (req, res, next) => {
-    Mahasiswa.find({}, { __v: 0 })
+const index = (req, res, next) => {
+    Mahasiswa.find({ "aktif": true }, { __v: 0 })
         .then((mhs) => {
             const responseMessage = {
                 code: 200,
@@ -34,7 +46,7 @@ const insert = (req, res, next) => {
     });
 
     mhs
-        .save()
+        .save() //insert/mennyimpan data ke model (tabel)
         .then((result) => {
             const responseMessage = {
                 code: 200,
@@ -47,8 +59,8 @@ const insert = (req, res, next) => {
         .catch((e) => {
             const responseMessage = {
                 code: 400,
-                success: true,
-                message: "Bad request"
+                success: false,
+                message: "Bad request " + e.message
             };
             res.status(400).json(responseMessage);
         });
@@ -96,7 +108,7 @@ const show = (req, res, next) => {
                 code: 200,
                 success: true,
                 message: "Successfull",
-                data: todo
+                data: mhs
             };
             res.status(200).json(responseMessage);
         })
@@ -110,7 +122,6 @@ const show = (req, res, next) => {
         });
 };
 
-
 //untuk menghandle request delete
 const destroy = (req, res, next) => {
     Mahasiswa
@@ -122,28 +133,17 @@ const destroy = (req, res, next) => {
                 message: "Successfull",
             };
             res.status(200).json(responseMessage);
+        }).catch((e) => {
+            const responseMessage = {
+                code: 404,
+                success: false,
+                message: "ID " + req.params.id + " Not Found",
+                error: e
+            };
+            res.status(404).json(responseMessage);
         });
-    /*.catch((e) => {
-        const responseMessage = {
-            code: 404,
-            success: false,
-            message: "ID " + req.params.id + " Not Found",
-            error: e
-        };
-        res.status(404).json(responseMessage);
-    });*/
 };
 
-module.exports = {
-    index, insert, update, show, destroy
-}
-[16.51, 22 / 11 / 2024] : const index = (req, res) => {
-    res.render('index', { title: 'Express' });
-};
 
-//buat controller untuk halaman kontak
-const kontak = (req, res) => {
-    res.render('kontak', { title: 'Kontak' });
-};
 
-module.exports = { index, kontak };
+module.exports = { index, insert, update, show, destroy }

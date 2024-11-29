@@ -4,7 +4,7 @@ const index = (req, res) => {
 
 //buat controller untuk halaman kontak
 const kontak = (req, res) => {
-    res.render('kontak', { title: 'Kontak' });
+    res.render('kontak', { title: 'Express' });
 };
 
-module.exports = { index, kontak };
+module.exports = { index, kontak }; 
